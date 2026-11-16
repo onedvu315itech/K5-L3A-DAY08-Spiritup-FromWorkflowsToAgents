@@ -12,7 +12,7 @@
 | STT | Họ tên      | MSSV        | Email                     | GitHub  | Vai trò                                                                         |
 | --: | ----------- | ----------- | ------------------------- | ------- | ------------------------------------------------------------------------------- |
 |   1 | Hồ Văn Dũng | 2A202603458 | 26ai.dunghv@vinuni.edu.vn | DungZai | Phần A — workflow: triển khai luồng xử lý claim cố định và kiểm tra retry/crash |
-|   2 |             |             |                           |         |                                                                                 |
+|   2 | Nguyễn Trường Thành | 2A202603512 | 26ai.thanhnt6@vinuni.edu.vn | Thanhnt-da | Phần C — orchestrator + handoff: orchestrator, investigator chỉ đọc, handoff allowlist, test ranh giới bảo mật |
 
 Gợi ý chia vai:
 
@@ -26,6 +26,7 @@ Gợi ý chia vai:
 | Người       | Vai                | Commit                                              | Test đã thêm hoặc sửa                                                                                                                   |
 | ----------- | ------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Hồ Văn Dũng | Shape A — workflow | `bfed7ad` — triển khai workflow và test retry/crash | `src/tests/test_workflow.py`: `test_workflow_unknown_claim_returns_safe_trace`, `test_workflow_resume_all_crash_windows` (3 điểm crash) |
+| Nguyễn Trường Thành | Shape C — orchestrator | `5bf3daa` — triển khai orchestrator + handoff allowlist | `src/tests/test_orchestrator_boundary.py`: 18 test (status mọi nhánh, trace/result không lộ secret/PII, handoff chỉ tool đọc) |
 
 ## Cá nhân
 
