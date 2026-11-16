@@ -4,7 +4,7 @@ Tối đa 5 trang ngoài phụ lục. Số liệu lấy từ file trong `src/rep
 
 ## 1. Thông tin nhóm
 
-- Tên nhóm:
+- Tên nhóm: Spiritup
 - Thành viên: xem `TEAM.md`
 - Commit chốt (trùng `report/team/decision_adr.md`):
 
@@ -13,6 +13,8 @@ Tối đa 5 trang ngoài phụ lục. Số liệu lấy từ file trong `src/rep
 Bài toán là xử lý claim hoàn tiền của LogiX-VN theo cùng luật nghiệp vụ trên bốn kiến trúc, sau đó chọn kiến trúc ít tự chủ nhất vẫn đáp ứng yêu cầu bằng số đo. Tiền, approval và chống ghi trùng do code kiểm soát; ticket là dữ liệu người dùng và không thể thay đổi policy.
 
 Hồ Văn Dũng (2A202603458) phụ trách phần A — workflow trong `src/lab8/shapes/workflow.py`. Phần A dùng các bước Python cố định, làm baseline để so sánh với single agent, orchestrator và swarm. Quy trình được triển khai theo thứ tự: kiểm tra claim và quyền sở hữu, tính quote, gọi host ghi refund, ghi trace và kiểm tra retry/crash. Phân công và tiến độ các shape còn lại chờ thành viên phụ trách bổ sung.
+
+Vũ Lê Đức (2A202603683) phụ trách phần B — single agent trong `src/lab8/shapes/single.py` và chạy các bộ kiểm thử, benchmark (`src/reports/benchmark.json`, `src/reports/crash.json`) để tổng hợp số liệu đối chiếu.
 
 ## 3. Giải pháp
 
@@ -32,7 +34,15 @@ Giữ nguyên chữ ký `run_claim(claim_id, *, seed, store_path, crash_at=None)
 
 **Trace và bảo mật.** Các event là `claim_lookup`, `order_lookup`, `quote`, `refund_requested`, `decision`. Trace chỉ ghi cờ tồn tại/quyền truy cập, lý do, quote và quyết định; không ghi ticket, nguyên claim/order, secret, header, số điện thoại, địa chỉ, tên hàng hoặc ghi chú nội bộ. Trace được ghi ở các nhánh trả về và trong `finally` quanh lời gọi host nếu có crash. Shape A không chuyển việc sang agent khác nên không tạo handoff; phần handoff allowlist của orchestrator do thành viên phần C bổ sung.
 
-### B — Single agent và C — Orchestrator
+### B — Single agent
+
+Shape B sử dụng một ReAct agent qua `lab8.runtime.run_react` với `max_steps=8` (`worker=True`).
+
+- **Vòng lặp ReAct và ranh giới tool:** Hàm `decide(obs)` đếm lời gọi mô hình qua `mock_llm.complete` vào `Budget` và chỉ gọi các tool đọc theo nhu cầu (`lookup_order`, `lookup_refund_history`, `compute_compensation`), không gọi `issue_refund` trong vòng lặp. Kết quả tính tiền dựa trên dữ liệu đơn hàng có cấu trúc thay vì tin nội dung `ticket`.
+- **Giao dịch host và độ bền:** Sau vòng lặp, code xử lý các nhánh `step_cap`, `needs_info`, `escalated`, `denied` (`proposal <= 0`), và truyền quote đầy đủ vào `durability.issue_refund(..., crash_at=crash_at)` để host tự áp approval, trần theo đơn và idempotency. Khi gặp `InjectedCrash`, shape ghi trace rồi để exception truyền ra ngoài và đóng connection trong `finally`.
+- **Trace an toàn:** Sử dụng `lab8.trace.Trace` và `safe_dump` để ghi các sự kiện chính (`tool`, `quote`, `decision`, `host_outcome`, `crash`, `error`), không ghi `ticket`, `parent_secret`, `raw_headers` hay thông tin cá nhân của đơn hàng.
+
+### C — Orchestrator
 
 Chờ thành viên phụ trách bổ sung thiết kế, ranh giới code/model và bằng chứng tương ứng.
 
@@ -43,6 +53,8 @@ Bảng so sánh 4 shape trên bộ public (từ `src/reports/benchmark.json`): p
 Phần A đã được kiểm tra bằng ma trận public trong `src/tests/test_public_matrix.py` và test bổ sung trong `src/tests/test_workflow.py`. Bằng chứng kiểm thử và lệnh đã chạy được ghi trong [báo cáo cá nhân Hồ Văn Dũng](2A202603458_HoVanDung.md), mục 4. Các kiểm tra bổ sung gồm claim không tồn tại và crash/resume tại `before_effect`, `after_effect_before_checkpoint`, `after_checkpoint`, xác nhận một refund và một audit committed sau resume.
 
 Đây là kiểm chứng triển khai, chưa phải bảng metric benchmark. Tại thời điểm bổ sung phần A, `src/reports/` chưa có `benchmark.json` và `crash.json`. Chưa kết luận pass rate hidden hoặc crash safety `20/20` từ các test riêng workflow.
+
+Phần B (`single`) đã đạt `62 passed, 186 deselected` trên ma trận student (`tests/test_public_matrix.py -k "single]"`), cùng bộ test mặc định `58 passed` và `lab8.check_submission` đạt `0 FAIL`. Theo số liệu tổng hợp trong `src/reports/benchmark.json` (14 claim public × 5 seed = 70 trial) và `src/reports/crash.json`: shape `single` đạt `pass_rate = 1.0` (`70/70`), `pass^5 = 1.0`, `seed min–max = 1.0–1.0`, `variance = 0.0`, `cost_per_success_vnd = 40.27` VND (chi phí mô phỏng), `mean_steps = 3.64`, `p95_steps = 4.0`, và `crash_safety = 20/20`.
 
 Nhóm cần chạy các lệnh sau trong `src/` rồi bổ sung bảng pass rate, pass^5, seed min–max, variance, cost/success, mean/p95 steps cho đủ bốn shape từ report được sinh ra:
 
@@ -70,11 +82,15 @@ Chi tiết đóng góp của từng thành viên nằm trong `TEAM.md` (bảng �
 
 Hồ Văn Dũng — MSSV 2A202603458: triển khai workflow, ghi trace có chọn lọc, tích hợp host và thêm test claim không tồn tại cùng ba điểm crash/resume. Commit kỹ thuật: `bfed7ad`, nhánh `features/workflow`. Codex hỗ trợ triển khai và chạy test; thành viên đã tự chạy C-001 và ghi cách đối chiếu kết quả trong báo cáo cá nhân. Đóng góp các thành viên khác chờ nhóm bổ sung.
 
+Vũ Lê Đức — MSSV 2A202603683: triển khai Shape B (`single`) trong `src/lab8/shapes/single.py` nhánh `features/single-react`, chạy các bộ test public và tổng hợp `crash.json`, `benchmark.json`, `ablation_r1.json`, `hidden_selfcheck.json`
+
 ## 7. Hạn chế và hướng cải thiện
 
 MockLLM không phải model sản xuất; latency là `unavailable` và giá token là mô phỏng. Workflow hiện dùng dữ liệu có cấu trúc, không gọi model; vì vậy chưa đánh giá khả năng xử lý trường hợp cần hiểu nội dung tự do hoặc thu thập thêm thông tin qua hội thoại.
 
 Kiểm tra public của phần A chưa thay thế bộ hidden và chưa đủ để kết luận workflow tốt hơn các shape khác. Khi có benchmark đầy đủ, nhóm cần cân nhắc độ đúng, độ ổn định và cost/success trên cùng corpus, seed và evaluator. Nếu task mở rộng cần xử lý thông tin mơ hồ hoặc các bước điều tra linh hoạt, lợi ích của agent cần được đo lại trước khi đổi kiến trúc.
+
+Hạn chế của single: Dù cùng đạt độ chính xác tối đa trên bộ public, `single` gộp chung ngữ cảnh đọc ticket và luồng xử lý hoàn tiền trong một agent nên không có ranh giới cách ly bảo mật rõ ràng. Hướng cải thiện là tách riêng ngữ cảnh dữ liệu đầu vào khỏi tác nhân ra quyết định và bổ sung kiểm thử trên tập dữ liệu lớn hơn để đánh giá độ ổn định lâu dài.
 
 ## 8. Tài liệu tham khảo
 
