@@ -4,15 +4,15 @@
 
 - Tên nhóm:
 - Lớp: L3A
-- Repo nhóm: `K5-L3A-DAY08-TenNhom-FromWorkflowsToAgents` (xem [SUBMISSION.md](SUBMISSION.md))
+- Repo nhóm: `K5-L3A-DAY08-Spiritup-FromWorkflowsToAgents` (xem [SUBMISSION.md](SUBMISSION.md))
 - URL repo, nhánh nộp, commit chốt:
 
 ## Thành viên
 
-| STT | Họ tên | MSSV | Email | GitHub | Vai trò |
-| --: | ------ | ---- | ----- | ------ | ------- |
-|   1 | Hồ Văn Dũng | 2A202603458 | Chờ bổ sung | Chờ bổ sung | Phần A — workflow: triển khai luồng xử lý claim cố định và kiểm tra retry/crash |
-|   2 |        |      |       |        |         |
+| STT | Họ tên      | MSSV        | Email                     | GitHub  | Vai trò                                                                         |
+| --: | ----------- | ----------- | ------------------------- | ------- | ------------------------------------------------------------------------------- |
+|   1 | Hồ Văn Dũng | 2A202603458 | 26ai.dunghv@vinuni.edu.vn | DungZai | Phần A — workflow: triển khai luồng xử lý claim cố định và kiểm tra retry/crash |
+|   2 |             |             |                           |         |                                                                                 |
 
 Gợi ý chia vai:
 
@@ -23,8 +23,8 @@ Gợi ý chia vai:
 
 `python -m lab8.check_submission` đọc bảng này bằng máy: giữ nguyên tiêu đề `## Bảng đóng góp` và các cột. Mỗi người một dòng: commit có nội dung và ít nhất một test đã thêm hoặc sửa.
 
-| Người | Vai | Commit | Test đã thêm hoặc sửa |
-| --- | --- | --- | --- |
+| Người       | Vai                | Commit                                              | Test đã thêm hoặc sửa                                                                                                                   |
+| ----------- | ------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Hồ Văn Dũng | Shape A — workflow | `bfed7ad` — triển khai workflow và test retry/crash | `src/tests/test_workflow.py`: `test_workflow_unknown_claim_returns_safe_trace`, `test_workflow_resume_all_crash_windows` (3 điểm crash) |
 
 ## Cá nhân
@@ -69,4 +69,4 @@ uv run --python 3.12 --with 'pytest>=8.3.4,<9' --with 'PyYAML>=6.0.2,<7' python 
 ```
 
 - Commit phần A: `bfed7ad` trên nhánh `features/workflow`.
-- Báo cáo cá nhân: `report/team/2A202603458_HoVanDung.md`. Email và GitHub chờ bổ sung.
+- Báo cáo cá nhân: `report/team/2A202603458_HoVanDung.md`. Email: `26ai.dunghv@vinuni.edu.vn`; GitHub: `DungZai`.
