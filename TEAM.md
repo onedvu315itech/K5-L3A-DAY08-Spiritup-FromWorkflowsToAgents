@@ -11,7 +11,7 @@
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-|   1 |        |      |       |        |         |
+|   1 | Hồ Văn Dũng | 2A202603458 | Chờ bổ sung | Chờ bổ sung | Phần A — workflow: triển khai luồng xử lý claim cố định và kiểm tra retry/crash |
 |   2 |        |      |       |        |         |
 
 Gợi ý chia vai:
@@ -25,7 +25,7 @@ Gợi ý chia vai:
 
 | Người | Vai | Commit | Test đã thêm hoặc sửa |
 | --- | --- | --- | --- |
-| | | | |
+| Hồ Văn Dũng | Shape A — workflow | `bfed7ad` — triển khai workflow và test retry/crash | `src/tests/test_workflow.py`: `test_workflow_unknown_claim_returns_safe_trace`, `test_workflow_resume_all_crash_windows` (3 điểm crash) |
 
 ## Cá nhân
 
@@ -39,16 +39,34 @@ Ví dụ: `report/team/20241234_NguyenVanAn.md`.
 
 Sao chép mục dưới đây cho từng thành viên.
 
-## MSSV_HoTen
+## 2A202603458_HoVanDung
 
 ### Phần việc phụ trách
 
--
+- Phần A — deterministic workflow trong `src/lab8/shapes/workflow.py`.
+- Kiểm tra riêng workflow bằng ma trận public và test bổ sung trong `src/tests/test_workflow.py`.
 
 ### Đóng góp cụ thể
 
--
+- Thay stub bằng quy trình cố định: đọc claim qua `get_claim_view`, kiểm tra mã đơn và quyền sở hữu qua `lookup_order`, tính quote bằng `compute_compensation`, gọi host và trả `RunResult` qua `finish`.
+- Dùng dữ liệu đơn có cấu trúc để tính quyền lợi; không dùng số ngày hoặc chỉ dẫn trong ticket để quyết định tiền.
+- Truyền quote đầy đủ vào `issue_refund`; host kiểm approval, trần theo đơn, phần đã hoàn và idempotency. Giữ `proposal_amount` là quote ban đầu.
+- Truyền `crash_at` cho host và để `InjectedCrash` truyền ra; đóng connection trong `finally`.
+- Ghi trace ở các nhánh trả về và trước khi lỗi crash truyền ra; không ghi ticket, nguyên claim/order, secret hoặc thông tin cá nhân.
+- Thêm test claim không tồn tại và test crash/resume tại `before_effect`, `after_effect_before_checkpoint`, `after_checkpoint`.
 
 ### Bằng chứng
 
--
+- Code: `src/lab8/shapes/workflow.py`.
+- Test bổ sung: `src/tests/test_workflow.py`.
+- Ma trận student riêng workflow: `62 passed, 244 deselected`.
+- Cổng test mặc định sau khi thêm test phần A: `58 passed, 248 deselected`.
+- Môi trường kiểm tra: Python 3.12, pytest và PyYAML theo giới hạn trong `src/requirements.txt`, chạy từ `src/` bằng uv:
+
+```text
+uv run --python 3.12 --with 'pytest>=8.3.4,<9' --with 'PyYAML>=6.0.2,<7' python -m pytest -q -m student -o addopts= -k workflow
+uv run --python 3.12 --with 'pytest>=8.3.4,<9' --with 'PyYAML>=6.0.2,<7' python -m pytest -q
+```
+
+- Commit phần A: `bfed7ad` trên nhánh `features/workflow`.
+- Báo cáo cá nhân: `report/team/2A202603458_HoVanDung.md`. Email và GitHub chờ bổ sung.
