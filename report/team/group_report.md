@@ -6,7 +6,7 @@ Tối đa 5 trang ngoài phụ lục. Số liệu lấy từ file trong `src/rep
 
 - Tên nhóm: Spiritup
 - Thành viên: xem `TEAM.md`
-- Commit chốt (trùng `report/team/decision_adr.md`):
+- Commit chốt (trùng `report/team/decision_adr.md`): `41c5495`
 
 ## 2. Mục tiêu và cách tiếp cận
 
