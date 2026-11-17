@@ -3,7 +3,7 @@
 `Shape chọn` phải là đúng một trong: `workflow`, `single`, `orchestrator`, `swarm`. Đây là shape được chấm cổng hidden.
 
 - Shape chọn: orchestrator
-- Commit hash: d726848
+- Commit hash: 41c5495
 - Run id dẫn chứng: R-orchestrator-C-001-s11, R-orchestrator-C-002-s55, R-orchestrator-C-012-s11, R-orchestrator-C-013-s11, R-orchestrator-C-014-s11 (src/reports/benchmark.json); R-orchestrator-C-H01-s11 (src/reports/hidden_selfcheck.json)
 - Pass rate / pass^5 / seed min-max / variance: 1.0 (70/70) / 1.0 / 1.0–1.0 / 0.0 (public, src/reports/benchmark.json); hidden self-check: 200/200 unlabeled, 0 errors (src/reports/hidden_selfcheck.json)
 - Cost per success (mô phỏng, VND): 56.65 (3965.3 / 70, src/reports/benchmark.json); hidden total_simulated_cost_vnd: 11836.5 across 200 trials, cost/success: unknown (src/reports/hidden_selfcheck.json)

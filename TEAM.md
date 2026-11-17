@@ -2,10 +2,10 @@
 
 ## Thông tin nhóm
 
-- Tên nhóm:
+- Tên nhóm: Spiritup
 - Lớp: L3A
 - Repo nhóm: `K5-L3A-DAY08-Spiritup-FromWorkflowsToAgents` (xem [SUBMISSION.md](SUBMISSION.md))
-- URL repo, nhánh nộp, commit chốt:
+- URL repo, nhánh nộp, commit chốt: https://github.com/onedvu315itech/K5-L3A-DAY08-Spiritup-FromWorkflowsToAgents, nhánh `main`, commit `41c5495`
 
 ## Thành viên
 
@@ -13,6 +13,7 @@
 | --: | ----------- | ----------- | ------------------------- | ------- | ------------------------------------------------------------------------------- |
 |   1 | Hồ Văn Dũng | 2A202603458 | 26ai.dunghv@vinuni.edu.vn | DungZai | Phần A — workflow: triển khai luồng xử lý claim cố định và kiểm tra retry/crash |
 |   2 | Nguyễn Trường Thành | 2A202603512 | 26ai.thanhnt6@vinuni.edu.vn | Thanhnt-da | Phần C — orchestrator + handoff: orchestrator, investigator chỉ đọc, handoff allowlist, test ranh giới bảo mật |
+|   3 | Vũ Lê Đức | 2A202603683 | onedvu315itech@gmail.com | onedvu315itech (`dylan-vu`) | Phần B — single agent: vòng ReAct `single`; chạy test, crash suite, benchmark và báo cáo tổng hợp |
 
 Gợi ý chia vai:
 
@@ -27,6 +28,7 @@ Gợi ý chia vai:
 | ----------- | ------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Hồ Văn Dũng | Shape A — workflow | `bfed7ad` — triển khai workflow và test retry/crash | `src/tests/test_workflow.py`: `test_workflow_unknown_claim_returns_safe_trace`, `test_workflow_resume_all_crash_windows` (3 điểm crash) |
 | Nguyễn Trường Thành | Shape C — orchestrator | `5bf3daa` — triển khai orchestrator + handoff allowlist | `src/tests/test_orchestrator_boundary.py`: 18 test (status mọi nhánh, trace/result không lộ secret/PII, handoff chỉ tool đọc) |
+| Vũ Lê Đức | Shape B — single | `743e935` — triển khai single (ReAct, tool đọc, full quote vào host) | Chưa thêm test riêng; đã chạy ma trận student `tests/test_public_matrix.py -k "single]"` (62 passed) |
 
 ## Cá nhân
 
